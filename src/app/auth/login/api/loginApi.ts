@@ -1,6 +1,16 @@
-import { axiosInstance } from "@/lib/axios";
+import axios from "axios";
 import { User } from "@/types/auth";
 import { authUtils } from "@/hooks/useAuth";
+
+// Create separate axios instance for login to avoid proactive refresh during login
+const loginAxiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_LARAVEL_API_URL,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+  timeout: 10000,
+});
 
 export interface LoginRequest {
   id: string; // email atau username (sesuai backend)
@@ -18,7 +28,7 @@ export interface LoginResponse {
 
 export const loginApi = async (data: LoginRequest): Promise<LoginResponse> => {
   try {
-    const response = await axiosInstance.post("/api/login", data);
+    const response = await loginAxiosInstance.post("/api/login", data);
 
     // Transform response to match User type
     const transformedUser: User = {

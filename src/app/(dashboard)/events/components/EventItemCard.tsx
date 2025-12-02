@@ -12,7 +12,6 @@ import {
 } from "react-icons/fa";
 import React, { useState } from "react";
 import Image from "next/image";
-import { RESOURCES } from "@/types/permissions";
 import hasAnyPermission from "@/lib/permissions";
 
 // ✅ Interface Props - Define tipe data yang diterima component
@@ -160,36 +159,6 @@ export function EventItemCard({ event, onDelete }: EventItemCardProps) {
           </div>
         </div>
       </Link>
-
-      {/* Share to WhatsApp Button */}
-      <div className="px-4 py-2">
-        <a
-          href={`https://wa.me/?text=${encodeURIComponent(
-            `*${event.nama || "Event Name"}*\n\n${
-              event.deskripsi || "Event description"
-            }\n\n📅 Tanggal: ${formatDate(event.tanggal_event)}\n⏰ Waktu: ${
-              event.waktu_event || "N/A"
-            } WIB\n📍 Tempat: ${
-              event.tempat_event || "Location not specified"
-            }\n🏷️ Kategori: ${
-              event.category?.nama || "Umum"
-            }\n\nDibagikan dari Aplikasi Multi Masjid\n\nLihat Kartu: ${`$${
-              process.env.NEXT_PUBLIC_LARAVEL_API_URL?.replace(
-                "https://",
-                "http://"
-              ) || "http://localhost:8000"
-            }/share/preview/event/${event.slug}`}`
-          )}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-md py-2 transition mt-2"
-        >
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-            {/* ...icon... */}
-          </svg>
-          Bagikan Event ke WhatsApp
-        </a>
-      </div>
     </div>
   );
 }

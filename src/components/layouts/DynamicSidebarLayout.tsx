@@ -50,7 +50,7 @@ const featureConfigs = {
   staff_schedule: {
     name: "Jadwal Petugas Management",
     icon: <FaCalendarCheck className="h-3 w-3" />,
-    basePath: "/staff-schedule",
+    basePath: "/staff-schedules",
     permissions: ["jadwal-petugas.index"],
   },
   staffs: {
@@ -58,6 +58,12 @@ const featureConfigs = {
     icon: <FaUserGraduate className="h-3 w-3" />,
     basePath: "/staffs",
     permissions: ["staffs.index"],
+  },
+  asatidz: {
+    name: "Asatidz Management",
+    icon: <FaUserGraduate className="h-3 w-3" />,
+    basePath: "/asatidzs",
+    permissions: ["asatidzs.index"],
   },
   dashboard: {
     name: "Dashboard",
@@ -107,7 +113,7 @@ export default function DynamicSidebarLayout({
   const currentFeature = getCurrentFeature(pathname);
 
   // Dashboard route - DENGAN FeatureNavbar tapi TANPA sidebar
-  if (pathname === "/dashboard" || pathname === "/dashboard/") {
+  if (pathname === "/dashboard" || pathname === "/calenders") {
     return (
       <PermissionGuard
         permissions={currentFeature.permissions}

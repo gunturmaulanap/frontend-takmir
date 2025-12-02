@@ -39,7 +39,7 @@ const getFeatureSidebarItems = (featureName: string): SidebarItem[] => {
       case "Category Management":
         return "/categories";
       case "Jadwal Petugas Management":
-        return "/staff-schedule";
+        return "/staff-schedules";
       default:
         return "/dashboard";
     }
@@ -127,16 +127,16 @@ const getFeatureSidebarItems = (featureName: string): SidebarItem[] => {
       if (hasAnyPermission(["jadwal-petugas.index"])) {
         scheduleItems.push({
           title: "Jadwal Petugas",
-          href: "/staff-schedule/main",
+          href: "/staff-schedules/main",
           icon: <GrSchedule />,
         });
       }
 
-      // Add Tambah Jamaah if user can create staff-schedule
+      // Add Tambah Jamaah if user can create staff-schedules
       if (hasAnyPermission(["jadwal-petugas.create"])) {
         scheduleItems.push({
           title: "Buat Jadwal Petugas",
-          href: "/staff-schedule/create",
+          href: "/staff-schedules/create",
           icon: (
             <svg
               className="h-4 w-4"
@@ -442,12 +442,14 @@ function SidebarContent({ featureName, className }: FeatureSidebarProps) {
     if (href === "/categories/main") return pathname === "/categories/main";
     if (href === "/categories/create")
       return pathname.startsWith("/categories/create");
-    if (href === "/staff-schedule")
-      return pathname === "/staff-schedule" || pathname === "/staff-schedule/";
-    if (href === "/staff-schedule/main")
-      return pathname === "/staff-schedule/main";
-    if (href === "/staff-schedule/create")
-      return pathname.startsWith("/staff-schedule/create");
+    if (href === "/staff-schedules")
+      return (
+        pathname === "/staff-schedules" || pathname === "/staff-schedules/"
+      );
+    if (href === "/staff-schedules/main")
+      return pathname === "/staff-schedules/main";
+    if (href === "/staff-schedules/create")
+      return pathname.startsWith("/staff-schedules/create");
     return pathname.startsWith(href);
   };
 

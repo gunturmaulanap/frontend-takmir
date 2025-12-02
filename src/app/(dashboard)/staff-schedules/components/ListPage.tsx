@@ -13,8 +13,7 @@ import { PiUsersThree } from "react-icons/pi";
 import { CgGenderMale, CgGenderFemale } from "react-icons/cg";
 import { MdEditDocument, MdSensorOccupied } from "react-icons/md";
 import { Pencil, Trash2 } from "lucide-react";
-
-import { useJamaahs } from "@/hooks/useJamaahs";
+import { useStaffSchedules } from "@/hooks/useStaffSchedules";
 import { Button } from "@/components/ui/button";
 import {
   Pagination,
@@ -25,28 +24,42 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { StaffSchedule } from "@/types/staff";
 
-interface JamaahListPageProps {
+interface StaffScheduleListPageProps {
   onDelete: (id: number) => void;
 }
-
-export function JamaahListPage({ onDelete }: JamaahListPageProps) {
+export function StaffScheduleListPage({
+  onDelete,
+}: StaffScheduleListPageProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12; // ✅ Mengikuti pattern Events/Takmirs
+  const itemsPerPage = 12;
 
-  // ✅ Menggunakan hook useJamaahs (mengikuti Events pattern)
   const {
-    data: paginatedJamaahs,
+    data: paginatedStaffSchedules,
     isLoading, // True hanya saat load pertama kali
     isFetching, // True setiap kali ambil data (background)
     isError,
     refetch,
-  } = useJamaahs(currentPage, itemsPerPage);
+  } = useStaffSchedules(currentPage, itemsPerPage);
 
-  const jamaahs = paginatedJamaahs?.data || [];
-  const paginationMeta = paginatedJamaahs?.meta;
+  const staffSchedules = paginatedStaffSchedules?.data || [];
+  const paginationMeta = paginatedStaffSchedules?.meta;
 
-  // ✅ Logic Pagination Generator (Bersih & Stabil)
+  const getStaffScheduleBulanIni = () => {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    return staffSchedules.filter((schedule) => {
+      const createdAt = new Date(schedule.created_at);
+      return (
+        createdAt.getMonth() === currentMonth &&
+        createdAt.getFullYear() === currentYear
+      );
+    });
+  };
+
   const generatePagination = () => {
     if (!paginationMeta) return [];
     const totalPages = paginationMeta.last_page;
@@ -89,20 +102,37 @@ export function JamaahListPage({ onDelete }: JamaahListPageProps) {
             </div>
             <div>
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mt-4">
-                Manajemen Jamaah
+                Manajemen Jadwal Petugas
               </h1>
               <p className="text-gray-600 mt-1">
-                Kelola semua data jamaah masjid Anda
+                Kelola semua data jadwal petugas Anda
               </p>
             </div>
           </div>
           <Link
-            href="/jamaahs/create"
+            href="/staff-schedules/create"
             className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 w-full sm:w-auto justify-center transition-colors duration-200"
           >
             <FaPlus className="h-4 w-4" />
-            <span>Tambah Jamaah</span>
+            <span>Tambah Jadwal Petugas</span>
           </Link>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <div className="flex items-center">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <FaUser className="h-5 w-5 text-blue-600" />
+            </div>
+            <div className="ml-3">
+              <p className="text-sm font-medium text-gray-600">Total Petugas</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {isLoading ? "..." : staffSchedules.length}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -115,7 +145,7 @@ export function JamaahListPage({ onDelete }: JamaahListPageProps) {
         </div>
       ) : isError ? (
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-red-800 mb-2">Gagal memuat data jamaah</p>
+          <p className="text-red-800 mb-2">Gagal memuat data jadwal petugas</p>
           <button
             onClick={() => refetch()}
             className="text-red-600 hover:text-red-700 underline text-sm"
@@ -129,7 +159,7 @@ export function JamaahListPage({ onDelete }: JamaahListPageProps) {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-900">
-                Data Jamaah
+                Data Jadwal Petugas
               </h2>
             </div>
 
@@ -145,22 +175,17 @@ export function JamaahListPage({ onDelete }: JamaahListPageProps) {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Nama
+                        Khatib
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        No. Handphone
+                        Imam
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Umur
+                        Muadzin
                       </th>
+
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Alamat
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Aktivitas Jamaah
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Jenis Kelamin
+                        Tema Khutbah
                       </th>
                       <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Aksi
@@ -168,48 +193,27 @@ export function JamaahListPage({ onDelete }: JamaahListPageProps) {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {jamaahs.map((jamaah: any) => (
+                    {staffSchedules.map((staffSchedule: StaffSchedule) => (
                       <tr
-                        key={jamaah.id}
+                        key={staffSchedule.id}
                         className="hover:bg-gray-50 transition-colors duration-150"
                       >
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {jamaah.nama}
+                          {staffSchedule.khatib.nama}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                          {jamaah.no_handphone}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                          {jamaah.umur}
+                          {staffSchedule.imam.nama}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600 max-w-xs">
-                          {jamaah.alamat}
+                          {staffSchedule.muadzin.nama}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                          {jamaah.aktivitas_jamaah}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          <div className="flex items-center">
-                            {jamaah.jenis_kelamin?.toLowerCase() ===
-                              "laki-laki" ||
-                            jamaah.jenis_kelamin
-                              ?.toLowerCase()
-                              .startsWith("l") ? (
-                              <>
-                                <CgGenderMale className="h-4 w-4 mr-2 text-gray-600" />
-                                <span>Laki-laki</span>
-                              </>
-                            ) : (
-                              <>
-                                <CgGenderFemale className="h-4 w-4 mr-2 text-gray-600" />
-                                <span>Perempuan</span>
-                              </>
-                            )}
-                          </div>
+
+                        <td className="px-6 py-4 text-sm text-gray-600 max-w-xs">
+                          {staffSchedule.tema_khutbah}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 text-right">
                           <Link
-                            href={`/jamaahs/edit/${jamaah.slug}`}
+                            href={`/staff-schedules/edit/${staffSchedule.slug}`}
                             className="inline-block mr-2"
                           >
                             <Button
@@ -223,7 +227,7 @@ export function JamaahListPage({ onDelete }: JamaahListPageProps) {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => onDelete(jamaah.id)}
+                            onClick={() => onDelete(staffSchedule.id)}
                             className="text-red-600 hover:text-red-700 hover:bg-red-50"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -237,54 +241,37 @@ export function JamaahListPage({ onDelete }: JamaahListPageProps) {
 
               {/* Mobile Cards */}
               <div className="block lg:hidden">
-                {jamaahs.map((jamaah: any) => (
+                {staffSchedules.map((staffSchedule: StaffSchedule) => (
                   <div
-                    key={jamaah.id}
+                    key={staffSchedule.id}
                     className="border-b border-gray-200 p-4 space-y-3"
                   >
                     <div className="flex items-center justify-between">
                       <h3 className="text-sm font-semibold text-gray-900">
-                        {jamaah.nama}
+                        {staffSchedule.khatib.nama}
                       </h3>
-                      <span className="text-xs text-gray-500">
-                        {jamaah.created_at}
-                      </span>
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center text-sm text-gray-600">
-                        <MdSensorOccupied className="h-3 w-3 mr-2" />
-                        {jamaah.umur} tahun
-                      </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        {jamaah.jenis_kelamin?.toLowerCase() === "laki-laki" ||
-                        jamaah.jenis_kelamin?.toLowerCase().startsWith("l") ? (
-                          <>
-                            <CgGenderMale className="h-4 w-4 mr-2 text-gray-600" />
-                            <span>Laki-laki</span>
-                          </>
-                        ) : (
-                          <>
-                            <CgGenderFemale className="h-4 w-4 mr-2 text-gray-600" />
-                            <span>Perempuan</span>
-                          </>
-                        )}
-                      </div>
-                      <div className="flex items-center text-sm text-gray-600">
                         <FaPhone className="h-3 w-3 mr-2" />
-                        {jamaah.no_handphone}
+                        {staffSchedule.imam.nama}
                       </div>
                       <div className="flex items-start text-sm text-gray-600">
                         <FaMapMarkerAlt className="h-3 w-3 mr-2 mt-0.5 flex-shrink-0" />
-                        <span className="leading-tight">{jamaah.alamat}</span>
+                        <span className="leading-tight">
+                          {staffSchedule.muadzin.nama}
+                        </span>
                       </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <MdEditDocument className="h-3 w-3 mr-2" />
-                        {jamaah.aktivitas_jamaah}
+                      <div className="flex items-start text-sm text-gray-600">
+                        <FaMapMarkerAlt className="h-3 w-3 mr-2 mt-0.5 flex-shrink-0" />
+                        <span className="leading-tight">
+                          {staffSchedule.tema_khutbah}
+                        </span>
                       </div>
                     </div>
                     <div className="flex gap-2 pt-2 border-t border-gray-100">
                       <Link
-                        href={`/jamaahs/edit/${jamaah.slug}`}
+                        href={`/staff-schedules/edit/${staffSchedule.slug}`}
                         className="flex-1"
                       >
                         <Button
@@ -299,7 +286,7 @@ export function JamaahListPage({ onDelete }: JamaahListPageProps) {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => onDelete(jamaah.id)}
+                        onClick={() => onDelete(staffSchedule.id)}
                         className="flex-1 text-red-600 hover:text-red-700 hover:bg-red-50 border border-red-200"
                       >
                         <Trash2 className="w-3 h-3 mr-1" />
@@ -313,25 +300,25 @@ export function JamaahListPage({ onDelete }: JamaahListPageProps) {
           </div>
 
           {/* ✅ Empty State - mengikuti pattern Events */}
-          {jamaahs.length === 0 && (
+          {staffSchedules.length === 0 && (
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12">
               <div className="text-center">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 mb-4">
                   <PiUsersThree className="h-8 w-8 text-emerald-600" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  Belum Ada Jamaah
+                  Belum Ada Jadwal
                 </h3>
                 <p className="text-gray-500 mb-6 max-w-md mx-auto">
-                  Mulai tambahkan jamaah pertama untuk mengelola data jamaah
-                  masjid.
+                  Mulai tambahkan jadwal pertama untuk mengelola data jadwal
+                  petugas masjid.
                 </p>
                 <Link
-                  href="/jamaahs/create"
+                  href="/staff-schedules/create"
                   className="inline-flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg transition-colors duration-200"
                 >
                   <FaPlus className="h-4 w-4" />
-                  <span>Tambah Jamaah</span>
+                  <span>Tambah Jadwal Petugas</span>
                 </Link>
               </div>
             </div>
@@ -342,7 +329,7 @@ export function JamaahListPage({ onDelete }: JamaahListPageProps) {
             <div className="flex items-center justify-between mt-8">
               <div className="text-sm text-gray-500">
                 Menampilkan {paginationMeta.from} - {paginationMeta.to} dari{" "}
-                {paginationMeta.total} jamaah
+                {paginationMeta.total} jadwal petugas
               </div>
 
               <Pagination>

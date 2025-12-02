@@ -1,7 +1,7 @@
 import LoginClient from "./components/LoginClient";
 
 export const metadata = {
-  title: "Login - Sistem Manajemen Masjid",
+  title: "Login - Multi Masjid",
   description: "Halaman login untuk pengguna yang sudah terdaftar",
 };
 

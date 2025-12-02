@@ -2,7 +2,6 @@ import { MosqueIcon } from "@/components/icons/MosqueIcon";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React from "react";
-import { FaMosque } from "react-icons/fa";
 
 export const Navbar: React.FC = () => {
   return (

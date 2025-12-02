@@ -56,7 +56,7 @@ function SidebarMenuItems({
         case "Category Management":
           return "/categories";
         case "Jadwal Petugas Management":
-          return "/staff-schedule";
+          return "/staff-schedules";
         default:
           return "/dashboard";
       }
@@ -364,7 +364,7 @@ function SidebarMenuItems({
           {
             title: "Jadwal Petugas",
             icon: <GrSchedule />,
-            href: "/staff-schedule/main",
+            href: "/staff-schedules/main",
           },
           {
             title: "Buat Jadwal Petugas",
@@ -383,7 +383,7 @@ function SidebarMenuItems({
                 ></path>
               </svg>
             ),
-            href: "/staff-schedule/create",
+            href: "/staff-schedules/create",
           },
         ];
 
@@ -446,8 +446,10 @@ function SidebarMenuItems({
     if (href === "/categories/main") return pathname === "/categories/main";
     if (href === "/categories/create")
       return pathname.startsWith("/categories/create");
-    if (href === "/staff-schedule")
-      return pathname === "/staff-schedule" || pathname === "/staff-schedule/";
+    if (href === "/staff-schedules")
+      return (
+        pathname === "/staff-schedules" || pathname === "/staff-schedules/"
+      );
     return pathname.startsWith(href);
   };
 
@@ -554,7 +556,7 @@ export function FeatureNavbar() {
     if (pathname.startsWith("/takmirs")) return "Takmir Management";
     if (pathname.startsWith("/staffs")) return "Staff Management";
     if (pathname.startsWith("/categories")) return "Category Management";
-    if (pathname.startsWith("/staff-schedule"))
+    if (pathname.startsWith("/staff-schedules"))
       return "Jadwal Petugas Management";
     return null; // Return null untuk tidak menampilkan sidebar
   };
@@ -598,7 +600,7 @@ export function FeatureNavbar() {
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Left: Mobile Logic */}
-            {pathname === "/dashboard" ? (
+            {pathname === "/dashboard" || pathname === "/calenders" ? (
               /* Mobile: Logo & Brand on Dashboard */
               <div className="xl:hidden">
                 <Link href="/dashboard" className="flex items-center space-x-3">

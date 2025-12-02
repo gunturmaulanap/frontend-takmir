@@ -98,7 +98,7 @@ export function DashboardCards({ userRole }: DashboardCardsProps) {
       )}
 
       {/* Staff Card */}
-      <Link href="/staff-schedule" className="group">
+      <Link href="/staff-schedules" className="group">
         <div className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 h-48 bg-gradient-to-br from-teal-500 to-emerald-600">
           <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors"></div>
           <div className="relative h-full p-8 flex flex-col justify-between text-white">
@@ -162,6 +162,21 @@ export function DashboardCards({ userRole }: DashboardCardsProps) {
             </div>
             <div className="text-center">
               <h3 className="text-lg font-bold mb-2">Kategori</h3>
+            </div>
+          </div>
+        </div>
+      </Link>
+      <Link href="/asatidzs" className="group">
+        <div className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 h-48 bg-gradient-to-br from-emerald-500 to-green-600">
+          <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors"></div>
+          <div className="relative h-full p-8 flex flex-col justify-between text-white">
+            <div className="flex justify-center mb-4">
+              <div className="p-2">
+                <FaUserTie className="h-12 w-12" />
+              </div>
+            </div>
+            <div className="text-center">
+              <h3 className="text-lg font-bold mb-2">Manajemen Asatidz</h3>
             </div>
           </div>
         </div>
