@@ -12,7 +12,7 @@ const StaffSchedulePage = () => {
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Link href="/staff-schedule/main">
+        <Link href="/staff-schedules/main">
           <div className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 ease-out cursor-pointer group">
             <div className="flex items-center mb-3">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
@@ -55,7 +55,7 @@ const StaffSchedulePage = () => {
             </p>
           </div>
         </Link>
-        <Link href="/staff-schedule/create">
+        <Link href="/staff-schedules/create">
           <div className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg hover:border-green-200 hover:-translate-y-1 transition-all duration-300 ease-out cursor-pointer group">
             <div className="flex items-center mb-3">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition-colors">

@@ -657,10 +657,6 @@ const CalenderPage = () => {
             </>
           )}
         </div>
-
-        <button className="fixed bottom-6 right-6 bg-indigo-600 text-white rounded-full p-4 shadow-xl hover:bg-indigo-700 transition-transform hover:scale-110 z-20">
-          <FaPlus size={20} />
-        </button>
       </div>
     </div>
   );

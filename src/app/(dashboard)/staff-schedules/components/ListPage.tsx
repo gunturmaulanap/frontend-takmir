@@ -8,13 +8,19 @@ import {
   FaPhone,
   FaMapMarkerAlt,
   FaCalendarAlt,
+  FaBook,
 } from "react-icons/fa";
 import { PiUsersThree } from "react-icons/pi";
 import { CgGenderMale, CgGenderFemale } from "react-icons/cg";
-import { MdEditDocument, MdSensorOccupied } from "react-icons/md";
+import {
+  MdEditDocument,
+  MdOutlineMenuBook,
+  MdSensorOccupied,
+} from "react-icons/md";
 import { Pencil, Trash2 } from "lucide-react";
 import { useStaffSchedules } from "@/hooks/useStaffSchedules";
 import { Button } from "@/components/ui/button";
+import { formatDate } from "@/lib/dateUtils";
 import {
   Pagination,
   PaginationContent,
@@ -25,6 +31,10 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { StaffSchedule } from "@/types/staff";
+import { MdDriveFileRenameOutline } from "react-icons/md";
+import { GiHealingShield } from "react-icons/gi";
+import { HiSpeakerWave } from "react-icons/hi2";
+import { BsCalendarDate } from "react-icons/bs";
 
 interface StaffScheduleListPageProps {
   onDelete: (id: number) => void;
@@ -45,20 +55,6 @@ export function StaffScheduleListPage({
 
   const staffSchedules = paginatedStaffSchedules?.data || [];
   const paginationMeta = paginatedStaffSchedules?.meta;
-
-  const getStaffScheduleBulanIni = () => {
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
-
-    return staffSchedules.filter((schedule) => {
-      const createdAt = new Date(schedule.created_at);
-      return (
-        createdAt.getMonth() === currentMonth &&
-        createdAt.getFullYear() === currentYear
-      );
-    });
-  };
 
   const generatePagination = () => {
     if (!paginationMeta) return [];
@@ -119,23 +115,6 @@ export function StaffScheduleListPage({
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className="flex items-center">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <FaUser className="h-5 w-5 text-blue-600" />
-            </div>
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">Total Petugas</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {isLoading ? "..." : staffSchedules.length}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Loading State Awal (Skeleton) */}
       {isLoading ? (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 animate-pulse space-y-4">
@@ -187,6 +166,9 @@ export function StaffScheduleListPage({
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Tema Khutbah
                       </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Jadwal Khutbah
+                      </th>
                       <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Aksi
                       </th>
@@ -211,9 +193,12 @@ export function StaffScheduleListPage({
                         <td className="px-6 py-4 text-sm text-gray-600 max-w-xs">
                           {staffSchedule.tema_khutbah}
                         </td>
+                        <td className="px-6 py-4 text-sm text-gray-600 max-w-xs">
+                          {formatDate(staffSchedule.tanggal)}
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 text-right">
                           <Link
-                            href={`/staff-schedules/edit/${staffSchedule.slug}`}
+                            href={`/staff-schedules/edit/${staffSchedule.id}`}
                             className="inline-block mr-2"
                           >
                             <Button
@@ -246,32 +231,47 @@ export function StaffScheduleListPage({
                     key={staffSchedule.id}
                     className="border-b border-gray-200 p-4 space-y-3"
                   >
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-semibold text-gray-900">
-                        {staffSchedule.khatib.nama}
-                      </h3>
-                    </div>
                     <div className="space-y-2">
                       <div className="flex items-center text-sm text-gray-600">
-                        <FaPhone className="h-3 w-3 mr-2" />
-                        {staffSchedule.imam.nama}
-                      </div>
-                      <div className="flex items-start text-sm text-gray-600">
-                        <FaMapMarkerAlt className="h-3 w-3 mr-2 mt-0.5 flex-shrink-0" />
+                        <GiHealingShield className="h-3 w-3 mr-2" />
                         <span className="leading-tight">
-                          {staffSchedule.muadzin.nama}
+                          <span className="font-bold">Khatib: </span>
+                          {staffSchedule.khatib.nama}
+                        </span>
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <MdOutlineMenuBook className="h-3 w-3 mr-2" />
+                        <span className="leading-tight">
+                          <span className="font-bold">Imam: </span>
+                          {staffSchedule.imam.nama}
                         </span>
                       </div>
                       <div className="flex items-start text-sm text-gray-600">
-                        <FaMapMarkerAlt className="h-3 w-3 mr-2 mt-0.5 flex-shrink-0" />
+                        <HiSpeakerWave className="h-3 w-3 mr-2 mt-0.5 flex-shrink-0" />
                         <span className="leading-tight">
+                          <span className="font-bold">Khatib: </span>
+                          {staffSchedule.khatib.nama}
+                        </span>
+                      </div>
+                      <div className="flex items-start text-sm text-gray-600">
+                        <FaBook className="h-3 w-3 mr-2 mt-0.5 flex-shrink-0" />
+                        <span className="leading-tight">
+                          <span className="font-bold">Tema: </span>
                           {staffSchedule.tema_khutbah}
+                        </span>
+                      </div>
+                      <div className="flex items-start text-sm text-gray-600">
+                        <BsCalendarDate className="h-3 w-3 mr-2 mt-0.5 flex-shrink-0" />
+                        <span className="leading-tight">
+                          {" "}
+                          <span className="font-bold">Tanggal: </span>
+                          {formatDate(staffSchedule.tanggal)}
                         </span>
                       </div>
                     </div>
                     <div className="flex gap-2 pt-2 border-t border-gray-100">
                       <Link
-                        href={`/staff-schedules/edit/${staffSchedule.slug}`}
+                        href={`/staff-schedules/edit/${staffSchedule.id}`}
                         className="flex-1"
                       >
                         <Button

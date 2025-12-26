@@ -77,6 +77,15 @@ export const useAuth = () => {
         const token = authUtils.getToken();
 
         if (userData && token) {
+          // Check if user is active
+          if (userData.is_active === false || userData.is_active === 0) {
+            // User is not active, logout and redirect to login
+            authUtils.logout();
+            toast.error("Akun Anda telah dinonaktifkan. Silakan hubungi superadmin.");
+            router.push("/auth/login");
+            return;
+          }
+
           setUser(userData);
         }
       } catch (error) {
@@ -121,15 +130,21 @@ export const useLoginMutation = () => {
     mutationFn: (data: LoginRequest): Promise<LoginResponse> => loginApi(data),
     onSuccess: (data) => {
       if (data.success && data.access_token) {
+        // Check if user is active before logging in
+        if (data.user && (data.user.is_active === false || data.user.is_active === 0)) {
+          toast.error("Akun Anda telah dinonaktifkan. Silakan hubungi superadmin.");
+          return;
+        }
+
         login(data.user, data.access_token);
-        toast.success("Login Successfully!");
+        toast.success("Login Berhasil!");
         router.push("/dashboard");
       }
     },
     onError: (error: any) => {
       const errorData = error.response?.data || { message: "Login failed" };
       toast.error(
-        errorData.message || "Login failed. Please check your credentials."
+        errorData.message || "Login gagal. Silakan periksa kembali kredensial Anda."
       );
     },
   });

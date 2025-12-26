@@ -106,7 +106,32 @@ axiosInstance.interceptors.request.use(
  * Backend-driven approach: hanya refresh jika backend response 401 dan refresh token tersedia
  */
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Cek user status dari setiap response sukses
+    if (response.data?.user) {
+      const userData = response.data.user;
+
+      // Jika user tidak aktif, logout dan redirect
+      if (userData.is_active === false || userData.is_active === 0) {
+        // Hapus semua auth data
+        localStorage.removeItem("token");
+        localStorage.removeItem("refresh_token");
+        localStorage.removeItem("user");
+        localStorage.removeItem("permissions");
+        localStorage.removeItem("login_time");
+
+        // Redirect ke login page
+        if (typeof window !== "undefined") {
+          window.location.href = "/auth/login";
+        }
+
+        // Return error untuk menghentikan request
+        return Promise.reject(new Error("Akun Anda telah dinonaktifkan"));
+      }
+    }
+
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
 

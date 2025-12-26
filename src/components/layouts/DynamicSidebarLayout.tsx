@@ -65,11 +65,35 @@ const featureConfigs = {
     basePath: "/asatidzs",
     permissions: ["asatidzs.index"],
   },
+  reports: {
+    name: "Report Management",
+    icon: <FaChartLine className="h-3 w-3" />,
+    basePath: "/reports",
+    permissions: ["transaksi-keuangan.index"],
+  },
+  asatidzs: {
+    name: "Asatidz Management",
+    icon: <FaUserGraduate className="h-3 w-3" />,
+    basePath: "/asatidzs",
+    permissions: ["asatidzs.index"],
+  },
   dashboard: {
     name: "Dashboard",
     icon: <FaChartLine className="h-3 w-3" />,
     basePath: "/dashboard",
     permissions: ["dashboards.index"],
+  },
+  profilemasjid: {
+    name: "Masjid Management",
+    icon: <FaChartLine className="h-3 w-3" />,
+    basePath: "/profile-masjids",
+    permissions: ["profile-masjid.index"],
+  },
+  adminmasjid: {
+    name: "Admin Management",
+    icon: <FaChartLine className="h-3 w-3" />,
+    basePath: "/admin-masjids",
+    permissions: ["admins.index"],
   },
 };
 
@@ -113,7 +137,12 @@ export default function DynamicSidebarLayout({
   const currentFeature = getCurrentFeature(pathname);
 
   // Dashboard route - DENGAN FeatureNavbar tapi TANPA sidebar
-  if (pathname === "/dashboard" || pathname === "/calenders") {
+  if (
+    pathname === "/dashboard" ||
+    pathname === "/calenders" ||
+    pathname === "/masjid-managements" ||
+    pathname.startsWith("/admin-masjids")
+  ) {
     return (
       <PermissionGuard
         permissions={currentFeature.permissions}

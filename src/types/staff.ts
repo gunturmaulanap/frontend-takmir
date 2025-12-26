@@ -32,13 +32,17 @@ export interface Muadzin {
 }
 
 export interface StaffSchedule {
+  id: number;
+  tanggal: string; // API returns as string
   imam: Imam;
-  tema_khutbah: string;
   khatib: Khatib;
   muadzin: Muadzin;
+  tema_khutbah: string;
+  profile_masjid_id: number;
+  created_by: number | null;
+  updated_by: number | null;
   created_at: string;
   updated_at: string;
   slug: string;
-  tanggal: string;
-  id: number;
 }
+

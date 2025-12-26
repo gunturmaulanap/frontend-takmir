@@ -40,6 +40,10 @@ const getFeatureSidebarItems = (featureName: string): SidebarItem[] => {
         return "/categories";
       case "Jadwal Petugas Management":
         return "/staff-schedules";
+      case "Report Management":
+        return "/reports";
+      case "Asatidz Management":
+        return "/asatidzs";
       default:
         return "/dashboard";
     }
@@ -159,11 +163,11 @@ const getFeatureSidebarItems = (featureName: string): SidebarItem[] => {
       return scheduleItems;
 
     case "Jamaah Management":
-      const staffScheduleItems = [...baseItems];
+      const jamaahItems = [...baseItems];
 
       // Add Daftar Jamaah if user can index jamaahs
       if (hasAnyPermission(["jamaahs.index", "jamaahs.view"])) {
-        staffScheduleItems.push({
+        jamaahItems.push({
           title: "Daftar Jamaah",
           href: "/jamaahs/main",
           icon: (
@@ -186,8 +190,8 @@ const getFeatureSidebarItems = (featureName: string): SidebarItem[] => {
 
       // Add Tambah Jamaah if user can create jamaahs
       if (hasAnyPermission(["jamaahs.create", "jamaahs.store"])) {
-        staffScheduleItems.push({
-          title: "Buat Jadwal",
+        jamaahItems.push({
+          title: "Buat Jamaah",
           href: "/jamaahs/create",
           icon: (
             <svg
@@ -208,7 +212,59 @@ const getFeatureSidebarItems = (featureName: string): SidebarItem[] => {
         });
       }
 
-      return staffScheduleItems;
+      return jamaahItems;
+
+    case "Asatidz Management":
+      const asatidzItems = [...baseItems];
+
+      // Add Daftar Jamaah if user can index jamaahs
+      if (hasAnyPermission(["asatidzs.index", "asatidzs.view"])) {
+        asatidzItems.push({
+          title: "Daftar Asatidz",
+          href: "/asatidzs/main",
+          icon: (
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+          ),
+        });
+      }
+
+      // Add Tambah Jamaah if user can create asatidzs
+      if (hasAnyPermission(["asatidzs.create", "asatidzs.store"])) {
+        asatidzItems.push({
+          title: "Buat Asatidz",
+          href: "/asatidzs/create",
+          icon: (
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+          ),
+          badge: "New",
+        });
+      }
+
+      return asatidzItems;
 
     case "Takmir Management":
       const takmirItems = [...baseItems];
@@ -395,6 +451,67 @@ const getFeatureSidebarItems = (featureName: string): SidebarItem[] => {
 
       return categoryItems;
 
+    case "Report Management":
+      const reportItems = [...baseItems];
+
+      // Add Dashboard if user can view dashboard
+      if (
+        hasAnyPermission([
+          "transaksi-keuangan.index",
+          "transaksi-keuangan.view",
+        ])
+      ) {
+        reportItems.push({
+          title: "Dashboard Keuangan",
+          href: "/reports/dashboard",
+          icon: (
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              />
+            </svg>
+          ),
+        });
+      }
+
+      // Add Daftar Transaksi if user can index transaksi-keuangan
+      if (
+        hasAnyPermission([
+          "transaksi-keuangan.index",
+          "transaksi-keuangan.view",
+        ])
+      ) {
+        reportItems.push({
+          title: "Daftar Transaksi",
+          href: "/reports/main",
+          icon: (
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              />
+            </svg>
+          ),
+        });
+      }
+
+      return reportItems;
+
     default:
       return [];
   }
@@ -442,6 +559,11 @@ function SidebarContent({ featureName, className }: FeatureSidebarProps) {
     if (href === "/categories/main") return pathname === "/categories/main";
     if (href === "/categories/create")
       return pathname.startsWith("/categories/create");
+    if (href === "/asatidzs")
+      return pathname === "/asatidzs" || pathname === "/asatidzs/";
+    if (href === "/asatidzs/main") return pathname === "/asatidzs/main";
+    if (href === "/asatidzs/create")
+      return pathname.startsWith("/asatidzs/create");
     if (href === "/staff-schedules")
       return (
         pathname === "/staff-schedules" || pathname === "/staff-schedules/"
@@ -450,6 +572,14 @@ function SidebarContent({ featureName, className }: FeatureSidebarProps) {
       return pathname === "/staff-schedules/main";
     if (href === "/staff-schedules/create")
       return pathname.startsWith("/staff-schedules/create");
+    if (href === "/reports")
+      return pathname === "/reports" || pathname === "/reports/";
+    if (href === "/reports/dashboard")
+      return (
+        pathname === "/reports/dashboard" || pathname === "/reports/dashboard/"
+      );
+    if (href === "/reports/main")
+      return pathname === "/reports/main" || pathname === "/reports/main/";
     return pathname.startsWith(href);
   };
 

@@ -116,12 +116,6 @@ export const eventEditSchema = z
   })
   .refine(
     (data) => {
-      // ✅ Perbaikan logic validasi:
-      // - Jika ada gambar lama DAN tidak ada gambar baru yang diupload: valid (keep existing)
-      // - Jika ada gambar lama DAN upload gambar baru: valid (replace)
-      // - Jika tidak ada gambar lama DAN tidak upload gambar baru: INVALID (harus upload)
-      // - Jika tidak ada gambar lama DAN upload gambar baru: valid (new image)
-
       const hasOldImage = data._hasOldImage === true;
       const hasNewImage = data.image !== undefined;
 

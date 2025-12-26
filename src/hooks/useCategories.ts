@@ -147,10 +147,20 @@ export function useDeleteCategory() {
     // On success: optimistic cache update (no flicker)
     onSuccess: (_, id) => {
       // Remove category from list cache instantly
-      queryClient.setQueryData(categoryKeys.lists(), (old: any) => {
-        if (!old) return old;
-        return old.filter((cat: Category) => cat.id !== id);
-      });
+      queryClient.setQueriesData(
+        {
+          queryKey: categoryKeys.lists(),
+          exact: false,
+        },
+        (old: any) => {
+          if (!old || !old.data) return old;
+
+          return {
+            ...old,
+            data: old.data.filter((cat: Category) => cat.id !== id),
+          };
+        }
+      );
 
       // Remove specific detail cache
       queryClient.removeQueries({ queryKey: categoryKeys.detail(id) });

@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 import { PiUsersThree } from "react-icons/pi";
 import { Pencil, Trash2 } from "lucide-react";
-import { useKhatibs } from "@/hooks/useKhatibs";
+import { useMuadzins } from "@/hooks/useMuadzins";
 import { Button } from "@/components/ui/button";
 import {
   Pagination,
@@ -23,7 +23,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Muadzin } from "@/types/staff";
-import { useMuadzins } from "@/hooks/useMuadzins";
 
 interface MuadzinListPageProps {
   onDelete: (id: number) => void;
@@ -93,7 +92,7 @@ export function MuadzinListPage({ onDelete }: MuadzinListPageProps) {
             </div>
           </div>
           <Link
-            href="/muadzins/create"
+            href="/staffs/muadzins/create"
             className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 w-full sm:w-auto justify-center transition-colors duration-200"
           >
             <FaPlus className="h-4 w-4" />
@@ -175,7 +174,7 @@ export function MuadzinListPage({ onDelete }: MuadzinListPageProps) {
 
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 text-right">
                           <Link
-                            href={`/muadzins/edit/${muadzin.slug}`}
+                            href={`/staffs/muadzins/edit/${muadzin.slug}`}
                             className="inline-block mr-2"
                           >
                             <Button
@@ -228,7 +227,7 @@ export function MuadzinListPage({ onDelete }: MuadzinListPageProps) {
                     </div>
                     <div className="flex gap-2 pt-2 border-t border-gray-100">
                       <Link
-                        href={`/muadzins/edit/${muadzin.slug}`}
+                        href={`/staffs/muadzins/edit/${muadzin.slug}`}
                         className="flex-1"
                       >
                         <Button
@@ -271,7 +270,7 @@ export function MuadzinListPage({ onDelete }: MuadzinListPageProps) {
                   masjid.
                 </p>
                 <Link
-                  href="/muadzins/create"
+                  href="/staffs/muadzins/create"
                   className="inline-flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg transition-colors duration-200"
                 >
                   <FaPlus className="h-4 w-4" />

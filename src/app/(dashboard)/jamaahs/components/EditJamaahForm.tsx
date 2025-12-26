@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { jamaahSchema } from "../schema/jamaahSchema";
+import { jamaahSchema, JamaahFormValues } from "../schema/jamaahSchema";
 import {
   Form,
   FormControl,
@@ -25,10 +25,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Checkbox } from "@/components/ui/checkbox";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { useJamaahs, useUpdateJamaah } from "@/hooks/useJamaahs";
-import { JamaahFormValues } from "../schema/jamaahSchema";
 import { parseApiError } from "@/utils/errorHandler";
 
 export default function EditJamaahForm() {
@@ -49,26 +49,31 @@ export default function EditJamaahForm() {
     defaultValues: {
       nama: "",
       no_handphone: "",
-      aktivitas_jamaah: "",
-      umur: undefined,
+      aktivitas_jamaah: [],
+      umur: "",
       alamat: "",
       jenis_kelamin: "Laki-laki",
-    },
+    } as JamaahFormValues,
     mode: "onChange",
   });
 
   // Update form values when jamaah data is loaded
   useEffect(() => {
     if (jamaah) {
-      form.reset({
+      const formData: JamaahFormValues = {
         nama: jamaah.nama || "",
         no_handphone: jamaah.no_handphone || "",
-        umur: jamaah.umur ? parseInt(jamaah.umur) : undefined,
-        aktivitas_jamaah: jamaah.aktivitas_jamaah || "",
+        umur: jamaah.umur?.toString() || "",
+        aktivitas_jamaah: Array.isArray(jamaah.aktivitas_jamaah)
+          ? jamaah.aktivitas_jamaah
+          : (jamaah.aktivitas_jamaah
+              ? jamaah.aktivitas_jamaah.split(', ').map(a => a.trim()).filter(a => a !== '')
+              : []),
         alamat: jamaah.alamat || "",
         jenis_kelamin:
           (jamaah.jenis_kelamin as "Laki-laki" | "Perempuan") || "Laki-laki",
-      });
+      };
+      form.reset(formData);
       setInitialJamaah(jamaah);
     }
   }, [jamaah, form]);
@@ -258,19 +263,53 @@ export default function EditJamaahForm() {
               <FormField
                 control={form.control}
                 name="aktivitas_jamaah"
-                render={({ field }) => (
+                render={() => (
                   <FormItem>
-                    <FormLabel className="text-base font-semibold">
-                      Aktivitas Jamaah <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="Contoh: TPA, Pengajian, dll"
-                        disabled={updateJamaahMutation.isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
+                    <div className="space-y-3">
+                      <FormLabel className="text-base font-semibold">
+                        Aktivitas Jamaah <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {[
+                          "Kajian Rutin",
+                          "TPA",
+                          "TPQ",
+                          "Shalat Jamaah",
+                          "Sukarelawan"
+                        ].map((aktivitas) => (
+                          <FormField
+                            key={aktivitas}
+                            control={form.control}
+                            name="aktivitas_jamaah"
+                            render={({ field }) => {
+                              return (
+                                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                  <FormControl>
+                                    <Checkbox
+                                      checked={field.value?.includes(aktivitas)}
+                                      onCheckedChange={(checked) => {
+                                        return checked
+                                          ? field.onChange([...field.value, aktivitas])
+                                          : field.onChange(
+                                              field.value?.filter(
+                                                (value) => value !== aktivitas
+                                              )
+                                            )
+                                      }}
+                                      disabled={updateJamaahMutation.isPending}
+                                    />
+                                  </FormControl>
+                                  <FormLabel className="font-normal cursor-pointer">
+                                    {aktivitas}
+                                  </FormLabel>
+                                </FormItem>
+                              )
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />

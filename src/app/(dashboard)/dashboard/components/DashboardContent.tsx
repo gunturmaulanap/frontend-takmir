@@ -45,10 +45,12 @@ export function DashboardContent() {
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
                 {mosqueName}
               </h1>
-              <div className="flex items-center text-gray-600">
-                <FaMapMarkerAlt className="h-4 w-4 mr-2" />
-                <p className="text-sm">{mosqueAddress}</p>
-              </div>
+              {userRole !== "superadmin" && (
+                <div className="flex items-center text-gray-600">
+                  <FaMapMarkerAlt className="h-4 w-4 mr-2" />
+                  <p className="text-sm">{mosqueAddress}</p>
+                </div>
+              )}
               <div className="mt-2">
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">
                   {userRole === "superadmin"

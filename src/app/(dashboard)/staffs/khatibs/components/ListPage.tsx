@@ -93,7 +93,7 @@ export function KhatibListPage({ onDelete }: KhatibListPageProps) {
             </div>
           </div>
           <Link
-            href="/khatibs/create"
+            href="/staffs/khatibs/create"
             className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 w-full sm:w-auto justify-center transition-colors duration-200"
           >
             <FaPlus className="h-4 w-4" />
@@ -175,7 +175,7 @@ export function KhatibListPage({ onDelete }: KhatibListPageProps) {
 
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 text-right">
                           <Link
-                            href={`/khatibs/edit/${khatib.slug}`}
+                            href={`/staffs/khatibs/edit/${khatib.slug}`}
                             className="inline-block mr-2"
                           >
                             <Button
@@ -225,7 +225,7 @@ export function KhatibListPage({ onDelete }: KhatibListPageProps) {
                     </div>
                     <div className="flex gap-2 pt-2 border-t border-gray-100">
                       <Link
-                        href={`/khatibs/edit/${khatib.slug}`}
+                        href={`/staffs/khatibs/edit/${khatib.slug}`}
                         className="flex-1"
                       >
                         <Button
@@ -268,7 +268,7 @@ export function KhatibListPage({ onDelete }: KhatibListPageProps) {
                   masjid.
                 </p>
                 <Link
-                  href="/khatibs/create"
+                  href="/staffs/khatibs/create"
                   className="inline-flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg transition-colors duration-200"
                 >
                   <FaPlus className="h-4 w-4" />

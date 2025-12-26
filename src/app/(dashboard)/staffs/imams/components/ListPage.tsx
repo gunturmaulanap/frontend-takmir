@@ -94,7 +94,7 @@ export function ImamListPage({ onDelete }: ImamListPageProps) {
             </div>
           </div>
           <Link
-            href="/imams/create"
+            href="/staffs/imams/create"
             className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 w-full sm:w-auto justify-center transition-colors duration-200"
           >
             <FaPlus className="h-4 w-4" />
@@ -173,7 +173,7 @@ export function ImamListPage({ onDelete }: ImamListPageProps) {
 
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 text-right">
                           <Link
-                            href={`/imams/edit/${imam.slug}`}
+                            href={`/staffs/imams/edit/${imam.slug}`}
                             className="inline-block mr-2"
                           >
                             <Button
@@ -223,7 +223,7 @@ export function ImamListPage({ onDelete }: ImamListPageProps) {
                     </div>
                     <div className="flex gap-2 pt-2 border-t border-gray-100">
                       <Link
-                        href={`/imams/edit/${imam.slug}`}
+                        href={`/staffs/imams/edit/${imam.slug}`}
                         className="flex-1"
                       >
                         <Button

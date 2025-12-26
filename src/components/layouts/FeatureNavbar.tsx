@@ -20,6 +20,8 @@ import { hasAnyPermission } from "@/lib/permissions";
 import { MosqueIcon } from "@/components/icons/MosqueIcon";
 import { GrSchedule } from "react-icons/gr";
 import { TbCategory } from "react-icons/tb";
+import { HiSpeakerWave } from "react-icons/hi2";
+import { MdOutlineMenuBook } from "react-icons/md";
 
 // Mobile Sidebar Menu Items Component
 interface NavbarSidebarItem {
@@ -57,6 +59,10 @@ function SidebarMenuItems({
           return "/categories";
         case "Jadwal Petugas Management":
           return "/staff-schedules";
+        case "Report Management":
+          return "/reports";
+        case "Asatidz Management":
+          return "/asatidzs";
         default:
           return "/dashboard";
       }
@@ -191,6 +197,58 @@ function SidebarMenuItems({
 
         return jamaahItems;
 
+      case "Asatidz Management":
+        const asatidzItems: NavbarSidebarItem[] = [...baseItems];
+
+        // Add Beranda Jamaah if user can index jamaahs
+        if (hasAnyPermission(["asatidzs.index"])) {
+          asatidzItems.push({
+            title: "Daftar Asatidz",
+            href: "/asatidzs/main",
+            icon: (
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                ></path>
+              </svg>
+            ),
+          });
+        }
+
+        // Add Tambah Jamaah if user can create asatidzs
+        if (hasAnyPermission(["asatidzs.create"])) {
+          asatidzItems.push({
+            title: "Tambah Asatidz",
+            href: "/asatidzs/create",
+            icon: (
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 4v16m8-8H4"
+                ></path>
+              </svg>
+            ),
+            badge: "New",
+          });
+        }
+
+        return asatidzItems;
+
       case "Takmir Management":
         const takmirItems: NavbarSidebarItem[] = [...baseItems];
 
@@ -286,21 +344,7 @@ function SidebarMenuItems({
           ...baseItems,
           {
             title: "Imams",
-            icon: (
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                />
-              </svg>
-            ),
+            icon: <MdOutlineMenuBook />,
             items: [
               {
                 title: "Daftar Imam",
@@ -328,21 +372,7 @@ function SidebarMenuItems({
           },
           {
             title: "Muadzin",
-            icon: (
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
-                />
-              </svg>
-            ),
+            icon: <HiSpeakerWave />,
             items: [
               {
                 title: "Daftar Muadzin",
@@ -388,6 +418,62 @@ function SidebarMenuItems({
         ];
 
         return scheduleItems;
+
+      case "Report Management":
+        const reportItems: NavbarSidebarItem[] = [...baseItems];
+
+        // Add Dashboard Keuangan
+        if (hasAnyPermission(["transaksi-keuangan.index"])) {
+          reportItems.push({
+            title: "Dashboard Keuangan",
+            href: "/reports/dashboard",
+            icon: (
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+            ),
+          });
+        }
+
+        // Add Daftar Transaksi
+        if (
+          hasAnyPermission([
+            "transaksi-keuangan.index",
+            "transaksi-keuangan.create",
+          ])
+        ) {
+          reportItems.push({
+            title: "Daftar Transaksi",
+            href: "/reports/main",
+            icon: (
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                />
+              </svg>
+            ),
+          });
+        }
+
+        return reportItems;
 
       default:
         return baseItems;
@@ -450,7 +536,18 @@ function SidebarMenuItems({
       return (
         pathname === "/staff-schedules" || pathname === "/staff-schedules/"
       );
-    return pathname.startsWith(href);
+    if (href === "/reports")
+      return pathname === "/reports" || pathname === "/reports/";
+    if (href === "/reports/dashboard")
+      return (
+        pathname === "/reports/dashboard" || pathname === "/reports/dashboard/"
+      );
+    if (href === "/reports/main")
+      return pathname === "/reports/main" || pathname === "/reports/main/";
+    if (href === "/asatidzs")
+      return pathname === "/asatidzs" || pathname === "/asatidzs/";
+    if (href === "/asatidzs/main") return pathname === "/asatidzs/main";
+    if (href === "/asatidzs/create") return pathname.startsWith(href);
   };
 
   const renderSidebarItem = (item: NavbarSidebarItem, level: number = 0) => {
@@ -558,6 +655,8 @@ export function FeatureNavbar() {
     if (pathname.startsWith("/categories")) return "Category Management";
     if (pathname.startsWith("/staff-schedules"))
       return "Jadwal Petugas Management";
+    if (pathname.startsWith("/reports")) return "Report Management";
+    if (pathname.startsWith("/asatidzs")) return "Asatidz Management";
     return null; // Return null untuk tidak menampilkan sidebar
   };
 
@@ -600,7 +699,10 @@ export function FeatureNavbar() {
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Left: Mobile Logic */}
-            {pathname === "/dashboard" || pathname === "/calenders" ? (
+            {pathname === "/dashboard" ||
+            pathname === "/calenders" ||
+            pathname === "/masjid-managements" ||
+            pathname.startsWith("/admin-masjids") ? (
               /* Mobile: Logo & Brand on Dashboard */
               <div className="xl:hidden">
                 <Link href="/dashboard" className="flex items-center space-x-3">

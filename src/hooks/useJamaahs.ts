@@ -121,16 +121,29 @@ export function useDeleteJamaah() {
       return await deleteJamaah(id);
     },
     onSuccess: (_, id) => {
-      // Invalidate semua query list yang ada.
-      // Karena kita menggunakan paginasi, refetch lebih aman daripada setQueryData.
-      queryClient.invalidateQueries({
-        queryKey: jamaahKeys.lists(),
-        // Force refetch semua halaman list yang ada di cache
-        refetchType: "all",
-      });
+      // Optimistic cache update (no flicker)
+      queryClient.setQueriesData(
+        {
+          queryKey: jamaahKeys.lists(),
+          exact: false,
+        },
+        (old: any) => {
+          if (!old || !old.data) return old;
 
-      // Opsional: Hapus detail jamaah yang terhapus dari cache
+          return {
+            ...old,
+            data: old.data.filter((jamaah: Jamaah) => jamaah.id !== id),
+          };
+        }
+      );
+
+      // Remove specific detail cache
       queryClient.removeQueries({ queryKey: jamaahKeys.detail(id) });
+
+      console.log("🗑️ Jamaah removed from cache smoothly");
+    },
+    onError: (error) => {
+      console.error("❌ Error deleting jamaah:", error);
     },
   });
 }

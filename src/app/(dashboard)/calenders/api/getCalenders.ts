@@ -53,21 +53,12 @@ export const getCalenders = async (month?: number, year?: number): Promise<Event
       if (response.data.data.calendar && Array.isArray(response.data.data.calendar)) {
         const calendarData = response.data.data.calendar;
         const allEvents: EventViewResponse[] = [];
-        const processedIds = new Set<string>(); // Track processed events to prevent duplicates
 
         calendarData.forEach((day: any) => {
           if (day.events && Array.isArray(day.events)) {
             day.events.forEach((event: any) => {
-              // Create a unique key based on type and id
+              // Create a unique key for later deduplication in hook
               const eventKey = `${event.type}-${event.id}`;
-
-              // Skip if we've already processed this event
-              if (processedIds.has(eventKey)) {
-                return;
-              }
-
-              // Add to processed set
-              processedIds.add(eventKey);
 
               // Clean and validate event data
               const cleanedEvent: EventViewResponse = {

@@ -4,10 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   FaPlus,
-  FaUser,
   FaPhone,
   FaMapMarkerAlt,
-  FaCalendarAlt,
+  FaSearch,
+  FaFilter,
 } from "react-icons/fa";
 import { PiUsersThree } from "react-icons/pi";
 import { CgGenderMale, CgGenderFemale } from "react-icons/cg";
@@ -16,6 +16,14 @@ import { Pencil, Trash2 } from "lucide-react";
 
 import { useJamaahs } from "@/hooks/useJamaahs";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Pagination,
   PaginationContent,
@@ -33,6 +41,20 @@ interface JamaahListPageProps {
 export function JamaahListPage({ onDelete }: JamaahListPageProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12; // ✅ Mengikuti pattern Events/Takmirs
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedAktivitas, setSelectedAktivitas] = useState("all");
+
+  const aktivitasOptions = [
+    { value: "all", label: "Semua Aktivitas" },
+    { value: "Kajian Rutin", label: "Kajian Rutin" },
+    { value: "Kajian Senin Kamis", label: "Kajian Senin Kamis" },
+    { value: "Kajian Sabtu", label: "Kajian Sabtu" },
+    { value: "Kajian Minggu", label: "Kajian Minggu" },
+    { value: "Tabligh Akhbar", label: "Tabligh Akhbar" },
+    { value: "TPQ", label: "TPQ" },
+    { value: "Shalat Jamaah", label: "Shalat Jamaah" },
+    { value: "Sukarelawan", label: "Sukarelawan" },
+  ];
 
   // ✅ Menggunakan hook useJamaahs (mengikuti Events pattern)
   const {
@@ -45,6 +67,20 @@ export function JamaahListPage({ onDelete }: JamaahListPageProps) {
 
   const jamaahs = paginatedJamaahs?.data || [];
   const paginationMeta = paginatedJamaahs?.meta;
+
+  // Filter jamaahs berdasarkan search dan aktivitas
+  const filteredJamaahs = jamaahs.filter((jamaah: any) => {
+    const matchesSearch = jamaah.nama
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesAktivitas =
+      selectedAktivitas === "all" ||
+      (Array.isArray(jamaah.aktivitas_jamaah)
+        ? jamaah.aktivitas_jamaah.includes(selectedAktivitas)
+        : jamaah.aktivitas_jamaah?.includes(selectedAktivitas));
+
+    return matchesSearch && matchesAktivitas;
+  });
 
   // ✅ Logic Pagination Generator (Bersih & Stabil)
   const generatePagination = () => {
@@ -103,6 +139,47 @@ export function JamaahListPage({ onDelete }: JamaahListPageProps) {
             <FaPlus className="h-4 w-4" />
             <span>Tambah Jamaah</span>
           </Link>
+        </div>
+      </div>
+
+      {/* Search dan Filter Section */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="flex flex-col md:flex-row gap-4">
+          {/* Search Input */}
+          <div className="flex-1">
+            <div className="relative">
+              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                type="text"
+                placeholder="Cari nama jamaah..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
+
+          {/* Filter Aktivitas */}
+          <div className="w-full md:w-64">
+            <div className="relative">
+              <FaFilter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Select
+                value={selectedAktivitas}
+                onValueChange={setSelectedAktivitas}
+              >
+                <SelectTrigger className="pl-10">
+                  <SelectValue placeholder="Filter Aktivitas" />
+                </SelectTrigger>
+                <SelectContent>
+                  {aktivitasOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -168,7 +245,7 @@ export function JamaahListPage({ onDelete }: JamaahListPageProps) {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {jamaahs.map((jamaah: any) => (
+                    {filteredJamaahs.map((jamaah: any) => (
                       <tr
                         key={jamaah.id}
                         className="hover:bg-gray-50 transition-colors duration-150"
@@ -185,8 +262,29 @@ export function JamaahListPage({ onDelete }: JamaahListPageProps) {
                         <td className="px-6 py-4 text-sm text-gray-600 max-w-xs">
                           {jamaah.alamat}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                          {jamaah.aktivitas_jamaah}
+                        <td className="px-6 py-4 text-sm text-gray-600 max-w-xs">
+                          {(() => {
+                            const aktivitas = jamaah.aktivitas_jamaah;
+                            if (Array.isArray(aktivitas)) {
+                              return (
+                                <div className="flex flex-wrap gap-1">
+                                  {aktivitas.map(
+                                    (act: string, index: number) => (
+                                      <span
+                                        key={index}
+                                        className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full"
+                                      >
+                                        {act}
+                                      </span>
+                                    )
+                                  )}
+                                </div>
+                              );
+                            } else {
+                              // Handle case where aktivitas_jamaah is a string (backward compatibility)
+                              return aktivitas;
+                            }
+                          })()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           <div className="flex items-center">
@@ -237,7 +335,7 @@ export function JamaahListPage({ onDelete }: JamaahListPageProps) {
 
               {/* Mobile Cards */}
               <div className="block lg:hidden">
-                {jamaahs.map((jamaah: any) => (
+                {filteredJamaahs.map((jamaah: any) => (
                   <div
                     key={jamaah.id}
                     className="border-b border-gray-200 p-4 space-y-3"
@@ -246,9 +344,6 @@ export function JamaahListPage({ onDelete }: JamaahListPageProps) {
                       <h3 className="text-sm font-semibold text-gray-900">
                         {jamaah.nama}
                       </h3>
-                      <span className="text-xs text-gray-500">
-                        {jamaah.created_at}
-                      </span>
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center text-sm text-gray-600">
@@ -277,9 +372,32 @@ export function JamaahListPage({ onDelete }: JamaahListPageProps) {
                         <FaMapMarkerAlt className="h-3 w-3 mr-2 mt-0.5 flex-shrink-0" />
                         <span className="leading-tight">{jamaah.alamat}</span>
                       </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <MdEditDocument className="h-3 w-3 mr-2" />
-                        {jamaah.aktivitas_jamaah}
+                      <div className="flex items-start text-sm text-gray-600">
+                        <MdEditDocument className="h-3 w-3 mr-2 mt-0.5 flex-shrink-0" />
+                        <div className="flex flex-wrap gap-1">
+                          {(() => {
+                            const aktivitas = jamaah.aktivitas_jamaah;
+                            if (Array.isArray(aktivitas)) {
+                              return aktivitas.map(
+                                (act: string, index: number) => (
+                                  <span
+                                    key={index}
+                                    className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full"
+                                  >
+                                    {act}
+                                  </span>
+                                )
+                              );
+                            } else {
+                              // Handle case where aktivitas_jamaah is a string (backward compatibility)
+                              return (
+                                <span className="text-gray-800">
+                                  {aktivitas}
+                                </span>
+                              );
+                            }
+                          })()}
+                        </div>
                       </div>
                     </div>
                     <div className="flex gap-2 pt-2 border-t border-gray-100">

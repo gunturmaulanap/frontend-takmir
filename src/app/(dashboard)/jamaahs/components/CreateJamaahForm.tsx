@@ -17,16 +17,7 @@ import { jamaahSchema, JamaahFormValues } from "../schema/jamaahSchema";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useCreateJamaah } from "@/hooks/useJamaahs";
-import {
-  FaArrowLeft,
-  FaUser,
-  FaBriefcase,
-  FaSave,
-  FaTimes,
-  FaPhone,
-  FaHome,
-  FaSpinner,
-} from "react-icons/fa";
+import { FaSave, FaTimes, FaSpinner } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { parseApiError } from "@/utils/errorHandler";
 import { Input } from "@/components/ui/input";
@@ -38,6 +29,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -59,11 +51,11 @@ export default function CreateJamaahForm() {
     defaultValues: {
       nama: "",
       no_handphone: "",
-      umur: undefined,
-      aktivitas_jamaah: "",
+      umur: "",
+      aktivitas_jamaah: [],
       alamat: "",
-      jenis_kelamin: undefined,
-    },
+      jenis_kelamin: "Laki-laki",
+    } as JamaahFormValues,
     mode: "onBlur",
   });
 
@@ -74,7 +66,7 @@ export default function CreateJamaahForm() {
     try {
       await createJamaahMutation.mutateAsync(data);
       toast.success("Jamaah berhasil dibuat!", { id: "create-jamaah" });
-      router.push("/jamaahs");
+      router.push("/jamaahs/main");
     } catch (error) {
       console.error("❌ Error creating jamaah:", error);
 
@@ -136,6 +128,7 @@ export default function CreateJamaahForm() {
                       <Input
                         {...field}
                         placeholder="08123456789"
+                        type="number"
                         disabled={isSubmitting}
                       />
                     </FormControl>
@@ -162,9 +155,8 @@ export default function CreateJamaahForm() {
                         type="number"
                         placeholder="Masukkan umur"
                         disabled={isSubmitting}
-                        onChange={(e) =>
-                          field.onChange(parseInt(e.target.value) || 0)
-                        }
+                        value={field.value}
+                        onChange={(e) => field.onChange(e.target.value)}
                       />
                     </FormControl>
                     <FormMessage />
@@ -227,19 +219,59 @@ export default function CreateJamaahForm() {
               <FormField
                 control={form.control}
                 name="aktivitas_jamaah"
-                render={({ field }) => (
+                render={() => (
                   <FormItem>
-                    <FormLabel className="text-base font-semibold">
-                      Aktivitas Jamaah <span className="text-red-500">*</span>
-                    </FormLabel>{" "}
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="Contoh: Pengurus, Remaja Masjid, dll"
-                        disabled={isSubmitting}
-                      />
-                    </FormControl>
-                    <FormMessage />
+                    <div className="space-y-3">
+                      <FormLabel className="text-base font-semibold">
+                        Aktivitas Jamaah <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {[
+                          "Kajian Rutin",
+                          "TPQ",
+                          "Kajian Senin Kamis",
+                          "Kajian Sabtu",
+                          "Kajian Minggu",
+                          "Tabligh Akhbar",
+                          "Shalat Jamaah",
+                          "Sukarelawan",
+                        ].map((aktivitas) => (
+                          <FormField
+                            key={aktivitas}
+                            control={form.control}
+                            name="aktivitas_jamaah"
+                            render={({ field }) => {
+                              return (
+                                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                  <FormControl>
+                                    <Checkbox
+                                      checked={field.value?.includes(aktivitas)}
+                                      onCheckedChange={(checked) => {
+                                        return checked
+                                          ? field.onChange([
+                                              ...field.value,
+                                              aktivitas,
+                                            ])
+                                          : field.onChange(
+                                              field.value?.filter(
+                                                (value) => value !== aktivitas
+                                              )
+                                            );
+                                      }}
+                                      disabled={isSubmitting}
+                                    />
+                                  </FormControl>
+                                  <FormLabel className="font-normal cursor-pointer">
+                                    {aktivitas}
+                                  </FormLabel>
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />
@@ -247,7 +279,7 @@ export default function CreateJamaahForm() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => router.push("/categories/main")}
+                  onClick={() => router.push("/jamaahs/main")}
                   className="flex-1 h-12"
                   disabled={isPending}
                 >

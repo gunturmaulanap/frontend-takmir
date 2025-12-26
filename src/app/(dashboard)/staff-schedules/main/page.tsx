@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { StaffScheduleListPage } from "@/app/(dashboard)/staff-schedules/components/ListPage";
 import { DeleteConfirmDialog } from "@/components/shared/DeleteConfirmDialog";
-import { useDeleteJamaah } from "@/hooks/useJamaahs";
+import { useDeleteStaffSchedule } from "@/hooks/useStaffSchedules";
 import { toast } from "sonner";
 
 const StaffSchedulePage = () => {
@@ -12,7 +12,7 @@ const StaffSchedulePage = () => {
     number | null
   >(null);
   const { mutate: deleteStaffSchedule, isPending: isDeleting } =
-    useDeleteJamaah();
+    useDeleteStaffSchedule();
 
   const handleDelete = (id: number) => {
     setStaffScheduleToDelete(id);

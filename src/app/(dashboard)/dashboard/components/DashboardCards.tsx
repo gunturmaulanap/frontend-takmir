@@ -23,6 +23,41 @@ export function DashboardCards({ userRole }: DashboardCardsProps) {
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {isSuperAdmin && (
+        <Link href="/masjid-managements" className="group">
+          <div className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 h-48 bg-gradient-to-br from-green-500 to-green-700">
+            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors"></div>
+            <div className="relative h-full p-8 flex flex-col justify-between text-white">
+              <div className="flex justify-center mb-4">
+                <div className="p-2">
+                  <FaMosque className="h-12 w-12" />
+                </div>
+              </div>
+              <div className="text-center">
+                <h3 className="text-lg font-bold mb-2">Management Masjid</h3>
+              </div>
+            </div>
+          </div>
+        </Link>
+      )}
+      {isSuperAdmin && (
+        <Link href="/admin-masjids" className="group">
+          <div className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 h-48 bg-gradient-to-br from-sky-400 to-sky-600">
+            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors"></div>
+            <div className="relative h-full p-8 flex flex-col justify-between text-white">
+              <div className="flex justify-center mb-4">
+                <div className="p-2">
+                  <FaUserTie className="h-12 w-12" />
+                </div>
+              </div>
+              <div className="text-center">
+                <h3 className="text-lg font-bold mb-2">Management Pengurus</h3>
+              </div>
+            </div>
+          </div>
+        </Link>
+      )}
+
       {/* Events Card */}
       {(isAdmin || isTakmir) && (
         <Link href="/events" className="group">
@@ -98,42 +133,46 @@ export function DashboardCards({ userRole }: DashboardCardsProps) {
       )}
 
       {/* Staff Card */}
-      <Link href="/staff-schedules" className="group">
-        <div className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 h-48 bg-gradient-to-br from-teal-500 to-emerald-600">
-          <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors"></div>
-          <div className="relative h-full p-8 flex flex-col justify-between text-white">
-            <div className="flex justify-center mb-4">
-              <div className="p-2">
-                <FaClipboardList className="h-12 w-12" />
+      {(isAdmin || isTakmir) && (
+        <Link href="/staff-schedules" className="group">
+          <div className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 h-48 bg-gradient-to-br from-teal-500 to-emerald-600">
+            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors"></div>
+            <div className="relative h-full p-8 flex flex-col justify-between text-white">
+              <div className="flex justify-center mb-4">
+                <div className="p-2">
+                  <FaClipboardList className="h-12 w-12" />
+                </div>
+              </div>
+              <div className="text-center">
+                <h3 className="text-lg font-bold mb-2">Jadwal Petugas</h3>
               </div>
             </div>
-            <div className="text-center">
-              <h3 className="text-lg font-bold mb-2">Jadwal Petugas</h3>
-            </div>
           </div>
-        </div>
-      </Link>
+        </Link>
+      )}
 
       {/* Staff Management Card */}
-      <Link href="/staffs" className="group">
-        <div className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 h-48 bg-gradient-to-br from-indigo-500 to-blue-600">
-          <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors"></div>
-          <div className="relative h-full p-8 flex flex-col justify-between text-white">
-            <div className="flex justify-center mb-4">
-              <div className="p-2">
-                <FaUserTie className="h-12 w-12" />
+      {(isAdmin || isTakmir) && (
+        <Link href="/staffs" className="group">
+          <div className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 h-48 bg-gradient-to-br from-indigo-500 to-blue-600">
+            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors"></div>
+            <div className="relative h-full p-8 flex flex-col justify-between text-white">
+              <div className="flex justify-center mb-4">
+                <div className="p-2">
+                  <FaUserTie className="h-12 w-12" />
+                </div>
+              </div>
+              <div className="text-center">
+                <h3 className="text-lg font-bold mb-2">Manajemen Petugas</h3>
               </div>
             </div>
-            <div className="text-center">
-              <h3 className="text-lg font-bold mb-2">Manajemen Petugas</h3>
-            </div>
           </div>
-        </div>
-      </Link>
+        </Link>
+      )}
 
       {/* Finances Card */}
       {isAdmin && (
-        <Link href="/finances" className="group">
+        <Link href="/reports" className="group">
           <div className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 h-48 bg-gradient-to-br from-green-500 to-green-700">
             <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors"></div>
             <div className="relative h-full p-8 flex flex-col justify-between text-white">
@@ -151,36 +190,40 @@ export function DashboardCards({ userRole }: DashboardCardsProps) {
       )}
 
       {/* Categories Card */}
-      <Link href="/categories" className="group">
-        <div className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 h-48 bg-gradient-to-br from-slate-700 to-slate-900">
-          <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors"></div>
-          <div className="relative h-full p-8 flex flex-col justify-between text-white">
-            <div className="flex justify-center mb-4">
-              <div className="p-2">
-                <FaCog className="h-12 w-12" />
+      {(isAdmin || isTakmir) && (
+        <Link href="/categories" className="group">
+          <div className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 h-48 bg-gradient-to-br from-slate-700 to-slate-900">
+            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors"></div>
+            <div className="relative h-full p-8 flex flex-col justify-between text-white">
+              <div className="flex justify-center mb-4">
+                <div className="p-2">
+                  <FaCog className="h-12 w-12" />
+                </div>
+              </div>
+              <div className="text-center">
+                <h3 className="text-lg font-bold mb-2">Kategori</h3>
               </div>
             </div>
-            <div className="text-center">
-              <h3 className="text-lg font-bold mb-2">Kategori</h3>
-            </div>
           </div>
-        </div>
-      </Link>
-      <Link href="/asatidzs" className="group">
-        <div className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 h-48 bg-gradient-to-br from-emerald-500 to-green-600">
-          <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors"></div>
-          <div className="relative h-full p-8 flex flex-col justify-between text-white">
-            <div className="flex justify-center mb-4">
-              <div className="p-2">
-                <FaUserTie className="h-12 w-12" />
+        </Link>
+      )}
+      {(isAdmin || isTakmir) && (
+        <Link href="/asatidzs" className="group">
+          <div className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 h-48 bg-gradient-to-br from-emerald-500 to-green-600">
+            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors"></div>
+            <div className="relative h-full p-8 flex flex-col justify-between text-white">
+              <div className="flex justify-center mb-4">
+                <div className="p-2">
+                  <FaUserTie className="h-12 w-12" />
+                </div>
+              </div>
+              <div className="text-center">
+                <h3 className="text-lg font-bold mb-2">Manajemen Asatidz</h3>
               </div>
             </div>
-            <div className="text-center">
-              <h3 className="text-lg font-bold mb-2">Manajemen Asatidz</h3>
-            </div>
           </div>
-        </div>
-      </Link>
+        </Link>
+      )}
     </div>
   );
 }

@@ -165,7 +165,7 @@ export default function EditCategoryForm({ slug }: { slug: string }) {
     <>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Inventore error nemo sit pariatur assumenda eaque, non magni sequi eos quibusdam.</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Edit Kategori</h1>
         <p className="text-gray-600 mt-1">Perbarui informasi kategori</p>
       </div>
 

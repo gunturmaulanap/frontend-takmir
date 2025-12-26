@@ -1,4 +1,5 @@
 import DynamicSidebarLayout from "@/components/layouts/DynamicSidebarLayout";
+import { DashboardGuard } from "@/components/auth/DashboardGuard";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -9,5 +10,9 @@ export const metadata = {
 };
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  return <DynamicSidebarLayout>{children}</DynamicSidebarLayout>;
+  return (
+    <DashboardGuard>
+      <DynamicSidebarLayout>{children}</DynamicSidebarLayout>
+    </DashboardGuard>
+  );
 }
