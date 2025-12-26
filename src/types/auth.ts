@@ -13,11 +13,30 @@ export interface MosqueProfile {
   id: number;
   user_id: number;
   nama: string; // Nama masjid (sesuai database)
-  slug: string;
+  slug?: string;
   alamat: string;
-  image: string | null;
-  created_at: string;
-  updated_at: string;
+  provinsi?: string;
+  kota_kabupaten?: string;
+  kecamatan?: string;
+  kelurahan?: string;
+  kode_pos?: string;
+  telepon?: string;
+  email?: string;
+  website?: string;
+  kapasitas_jamaah?: number;
+  luas_tanah?: number;
+  luas_bangunan?: number;
+  tahun_berdiri?: number;
+  nama_ketua?: string;
+  telepon_ketua?: string;
+  nama_bendahara?: string;
+  telepon_bendahara?: string;
+  nama_amar?: string;
+  telepon_amar?: string;
+  fax?: string;
+  image?: string | null;
+  created_at?: string;
+  updated_at?: string;
   laravel_through_key?: number;
 }
 

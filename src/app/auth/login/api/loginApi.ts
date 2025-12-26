@@ -52,6 +52,11 @@ export const loginApi = async (data: LoginRequest): Promise<LoginResponse> => {
       if (response.data.permissions) {
         localStorage.setItem("permissions", JSON.stringify(response.data.permissions));
       }
+
+      // Simpan profile_masjid secara terpisah untuk memastikan data tersimpan
+      if (response.data.profile_masjid) {
+        localStorage.setItem("profile_masjid", JSON.stringify(response.data.profile_masjid));
+      }
     }
 
     return {

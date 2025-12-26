@@ -29,9 +29,7 @@ export function DashboardContent() {
   const mosqueAddress = user.profile_masjid?.alamat || "Belum ada data masjid";
 
   // Extract role from roles array or fallback to role property
-  const roleValue = Array.isArray(user.roles)
-    ? user.roles[0]
-    : user.role;
+  const roleValue = Array.isArray(user.roles) ? user.roles[0] : user.role;
 
   const userRole = (roleValue?.toLowerCase() || "admin") as
     | "admin"

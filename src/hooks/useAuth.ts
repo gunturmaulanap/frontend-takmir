@@ -16,7 +16,17 @@ export const authUtils = {
     if (typeof window === "undefined") return null;
     try {
       const userStr = localStorage.getItem("user");
-      return userStr ? JSON.parse(userStr) : null;
+      const user = userStr ? JSON.parse(userStr) : null;
+
+      // Attach profile_masjid from separate localStorage if exists and user doesn't have it
+      if (user && !user.profile_masjid) {
+        const profileMasjidStr = localStorage.getItem("profile_masjid");
+        if (profileMasjidStr) {
+          user.profile_masjid = JSON.parse(profileMasjidStr);
+        }
+      }
+
+      return user;
     } catch {
       return null;
     }
@@ -59,6 +69,7 @@ export const authUtils = {
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("user");
     localStorage.removeItem("permissions");
+    localStorage.removeItem("profile_masjid");
     localStorage.removeItem("login_time");
   },
 };
