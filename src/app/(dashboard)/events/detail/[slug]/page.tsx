@@ -77,14 +77,14 @@ export default function EventDetailPage({
     <div className="max-w-4xl mx-auto">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
-        <Link href="/events">
+        <Link href="/events/main">
           <Button variant="outline" className="flex items-center">
             <FaArrowLeft className="mr-2 h-4 w-4" />
             Kembali
           </Button>
         </Link>
         <Link href={`/events/edit/${slug}`}>
-          <Button className="bg-purple-600 hover:bg-purple-700 flex items-center">
+          <Button className="bg-emerald-600 hover:bg-emerald-700 flex items-center">
             <FaEdit className="mr-2 h-4 w-4" />
             Edit Event
           </Button>
@@ -113,7 +113,7 @@ export default function EventDetailPage({
             {/* Category Badge */}
             {event.category && (
               <div className="mb-4">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800">
                   <FaTag className="mr-2 h-3 w-3" />
                   {event.category.nama}
                 </span>
@@ -129,7 +129,7 @@ export default function EventDetailPage({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 rounded-lg w-full">
               {/* Tanggal */}
               <div className="flex items-start justify-center">
-                <FaCalendarAlt className="h-5 w-5 text-purple-600 mr-3 mt-1" />
+                <FaCalendarAlt className="h-5 w-5 text-emerald-600 mr-3 mt-1" />
                 <div>
                   <p className="text-sm font-medium text-gray-600">Tanggal</p>
                   <p className="text-base font-semibold text-gray-900">
@@ -145,7 +145,7 @@ export default function EventDetailPage({
 
               {/* Waktu */}
               <div className="flex items-start justify-center">
-                <FaClock className="h-5 w-5 text-purple-600 mr-3 mt-1" />
+                <FaClock className="h-5 w-5 text-emerald-600 mr-3 mt-1" />
                 <div>
                   <p className="text-sm font-medium text-gray-600">Waktu</p>
                   <p className="text-base font-semibold text-gray-900">
@@ -156,7 +156,7 @@ export default function EventDetailPage({
 
               {/* Lokasi */}
               <div className="flex items-start justify-center">
-                <FaMapMarkerAlt className="h-5 w-5 text-purple-600 mr-3 mt-1" />
+                <FaMapMarkerAlt className="h-5 w-5 text-emerald-600 mr-3 mt-1" />
                 <div>
                   <p className="text-sm font-medium text-gray-600">Lokasi</p>
                   <p className="text-base font-semibold text-gray-900">

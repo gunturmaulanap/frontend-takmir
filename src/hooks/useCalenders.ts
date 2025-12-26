@@ -21,6 +21,8 @@ export interface CalendarEvent {
     categoryColor?: string;
     location?: string;
     description?: string;
+    image?: string;
+    date?: string; // Add date field for formatting
     originalData?: EventViewResponse;
   };
 }
@@ -88,8 +90,10 @@ export function useCalendarEvents(month?: number, year?: number) {
               type: "event",
               category: eventView.related_data?.category || "Umum",
               categoryColor: "#3B82F6", // Blue color for events
-              location: "Masjid", // Default location
+              location: eventView.related_data?.location || "Masjid", // Use from backend
               description: eventView.description || "",
+              image: eventView.related_data?.image || undefined,
+              date: eventView.date, // Add full date for formatting
               originalData: eventView,
             },
           };

@@ -30,7 +30,10 @@ import {
   FaInfoCircle,
   FaChevronLeft,
   FaChevronRight,
+  FaImage,
+  FaTag,
 } from "react-icons/fa";
+import Image from "next/image";
 import { useCalendarEvents, CalendarEvent } from "../../../hooks/useCalenders";
 
 // PENTING: Import file CSS kustom kita
@@ -290,32 +293,70 @@ const CalenderPage = () => {
                   {format(selectedDate, "EEEE", { locale: id })}
                 </p>
               </div>
-              <div className="space-y-3 max-h-[480px] overflow-y-auto pr-2">
+              <div className="space-y-3">
                 {eventsForSelectedDate.length > 0 ? (
                   eventsForSelectedDate.map((event) => (
                     <div
                       key={event.id}
-                      className="bg-white rounded-xl shadow-md border p-4 transition-all hover:shadow-lg hover:border-indigo-300"
+                      className="bg-white rounded-xl shadow-md border overflow-hidden transition-all hover:shadow-lg hover:border-indigo-300"
                     >
-                      <div className="flex items-start gap-4">
-                        <div className="mt-1 text-2xl">
-                          {getCategoryIcon(event.resource.category)}
+                      {event.resource.type === "event" &&
+                      event.resource.image ? (
+                        <div className="relative w-full h-[32rem] bg-gray-100 overflow-hidden aspect-[3/4]">
+                          <Image
+                            priority
+                            src={event.resource.image}
+                            alt={event.title}
+                            fill
+                            className="object-cover object-top"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            onError={() => {
+                              console.error(
+                                "Image load error:",
+                                event.resource.image
+                              );
+                            }}
+                          />
                         </div>
-                        <div className="flex-1">
-                          <p className="font-bold text-slate-800">
-                            {event.title}
-                          </p>
-                          <div className="mt-2 text-sm space-y-1.5 text-slate-600">
-                            <p className="flex items-center gap-2">
-                              <FaRegClock />
-                              <span>{format(event.start, "HH:mm")} WIB</span>
+                      ) : event.resource.type === "event" ? (
+                        <div className="relative w-full h-[32rem] bg-gradient-to-br from-purple-100 to-blue-100 aspect-[3/4] flex items-center justify-center">
+                          <FaImage className="h-12 w-12 text-gray-400" />
+                        </div>
+                      ) : null}
+                      <div className="p-4">
+                        <div className="flex items-start gap-4">
+                          <div className="mt-1 text-2xl">
+                            {getCategoryIcon(event.resource.category)}
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-bold text-slate-800">
+                              {event.title}
                             </p>
-                            <p className="flex items-center gap-2">
-                              <FaMapMarkerAlt />
-                              <span>
-                                {event.resource?.location || "Masjid"}
-                              </span>
-                            </p>
+                            <div className="mt-2 text-sm space-y-1.5 text-slate-600">
+                              <p className="flex items-center gap-2">
+                                <FaRegClock />
+                                <span>{format(event.start, "HH:mm")} WIB</span>
+                              </p>
+                              <p className="flex items-center gap-2">
+                                <FaMapMarkerAlt />
+                                <span>
+                                  {event.resource?.location || "Masjid"}
+                                </span>
+                              </p>
+                              {/* {event.resource.category && (
+                                <p className="flex items-center gap-2">
+                                  <FaTag />
+                                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-purple-100 text-purple-800">
+                                    {event.resource.category}
+                                  </span>
+                                </p>
+                              )} */}
+                              {event.resource.description && (
+                                <p className="text-slate-600 text-xs mt-2 line-clamp-2">
+                                  {event.resource.description}
+                                </p>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -548,32 +589,51 @@ const CalenderPage = () => {
                   {eventsForSelectedDate.map((event) => (
                     <div
                       key={event.id}
-                      className="bg-white rounded-xl shadow-md border border-slate-200 p-4 transition-all"
+                      className="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden transition-all"
                     >
-                      <div className="flex items-start gap-4">
-                        <div className="mt-1 text-2xl">
-                          {getCategoryIcon(event.resource.category)}
+                      {event.resource.type === "event" &&
+                      event.resource.image ? (
+                        <div className="relative w-full h-[32rem] bg-gray-100 overflow-hidden aspect-[3/4]">
+                          <Image
+                            priority
+                            src={event.resource.image}
+                            alt={event.title}
+                            fill
+                            className="object-cover object-top"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          />
                         </div>
-                        <div className="flex-1">
-                          <p className="font-bold text-slate-800">
-                            {event.title}
-                          </p>
-                          <div className="mt-2 text-sm space-y-1.5 text-slate-600">
-                            <p className="flex items-center gap-2">
-                              <FaRegClock />
-                              <span>{format(event.start, "HH:mm")} WIB</span>
+                      ) : event.resource.type === "event" ? (
+                        <div className="relative w-full h-[32rem] bg-gradient-to-br from-purple-100 to-blue-100 aspect-[3/4] flex items-center justify-center">
+                          <FaImage className="h-12 w-12 text-gray-400" />
+                        </div>
+                      ) : null}
+                      <div className="p-4">
+                        <div className="flex items-start gap-4">
+                          <div className="mt-1 text-2xl">
+                            {getCategoryIcon(event.resource.category)}
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-bold text-slate-800">
+                              {event.title}
                             </p>
-                            <p className="flex items-center gap-2">
-                              <FaMapMarkerAlt />
-                              <span>
-                                {event.resource?.location || "Masjid"}
-                              </span>
-                            </p>
-                            {event.resource?.description && (
-                              <p className="text-slate-600 mt-2 text-sm">
-                                {event.resource.description}
+                            <div className="mt-2 text-sm space-y-1.5 text-slate-600">
+                              <p className="flex items-center gap-2">
+                                <FaRegClock />
+                                <span>{format(event.start, "HH:mm")} WIB</span>
                               </p>
-                            )}
+                              <p className="flex items-center gap-2">
+                                <FaMapMarkerAlt />
+                                <span>
+                                  {event.resource?.location || "Masjid"}
+                                </span>
+                              </p>
+                              {event.resource?.description && (
+                                <p className="text-slate-600 mt-2 text-sm">
+                                  {event.resource.description}
+                                </p>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>

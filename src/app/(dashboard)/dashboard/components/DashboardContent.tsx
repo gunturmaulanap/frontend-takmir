@@ -27,7 +27,13 @@ export function DashboardContent() {
   // Get mosque info from profile_masjid
   const mosqueName = user.profile_masjid?.nama || "Sistem Manajemen Masjid";
   const mosqueAddress = user.profile_masjid?.alamat || "Belum ada data masjid";
-  const userRole = (user.role?.toLowerCase() || "admin") as
+
+  // Extract role from roles array or fallback to role property
+  const roleValue = Array.isArray(user.roles)
+    ? user.roles[0]
+    : user.role;
+
+  const userRole = (roleValue?.toLowerCase() || "admin") as
     | "admin"
     | "superadmin"
     | "takmir";
@@ -73,7 +79,7 @@ export function DashboardContent() {
               Welcome back, {user.name}!
             </h1>
             <p className="text-gray-600">
-              Role: {user.role} • {user.email}
+              Role: {userRole} • {user.email}
             </p>
           </div>
           <div className="text-right">
