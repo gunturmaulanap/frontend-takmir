@@ -31,6 +31,7 @@ import {
   isImagePath,
   resolveTransactionImageUrl,
 } from "../utils/transactionImage";
+import hasAnyPermission from "@/lib/permissions";
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat("id-ID", {
@@ -127,13 +128,15 @@ export default function ReportList({ onDelete }: ReportListProps) {
           <h1 className="text-2xl font-bold text-gray-900">Daftar Transaksi</h1>
           <p className="text-gray-600 mt-1">Kelola semua transaksi keuangan masjid</p>
         </div>
-        <Button
-          onClick={handleAddClick}
-          className="bg-emerald-600 hover:bg-emerald-700"
-        >
-          <FaPlus className="mr-2 h-4 w-4" />
-          Tambah Transaksi
-        </Button>
+        {hasAnyPermission(["transaksi-keuangan.create"]) && (
+          <Button
+            onClick={handleAddClick}
+            className="bg-emerald-600 hover:bg-emerald-700"
+          >
+            <FaPlus className="mr-2 h-4 w-4" />
+            Tambah Transaksi
+          </Button>
+        )}
       </div>
 
       {/* Filters */}
@@ -309,26 +312,29 @@ export default function ReportList({ onDelete }: ReportListProps) {
                     <FaEye className="mr-2 h-3 w-3" />
                     Detail
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleEditClick(transaction)}
-                    className="flex-1"
-                  >
-                    <FaEdit className="mr-2 h-3 w-3" />
-                    Edit
-                  </Button>
-                  {onDelete && (
+                  {hasAnyPermission(["transaksi-keuangan.edit"]) && (
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => onDelete(transaction.id)}
-                      className="flex-1 text-red-600 hover:text-red-700"
+                      onClick={() => handleEditClick(transaction)}
+                      className="flex-1"
                     >
-                      <FaTrash className="mr-2 h-3 w-3" />
-                      Hapus
+                      <FaEdit className="mr-2 h-3 w-3" />
+                      Edit
                     </Button>
                   )}
+                  {onDelete &&
+                    hasAnyPermission(["transaksi-keuangan.delete"]) && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onDelete(transaction.id)}
+                        className="flex-1 text-red-600 hover:text-red-700"
+                      >
+                        <FaTrash className="mr-2 h-3 w-3" />
+                        Hapus
+                      </Button>
+                    )}
                 </div>
               </div>
             ))}
@@ -445,23 +451,26 @@ export default function ReportList({ onDelete }: ReportListProps) {
                           >
                             <FaEye className="h-4 w-4" />
                           </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleEditClick(transaction)}
-                          >
-                            <FaEdit className="h-4 w-4" />
-                          </Button>
-                          {onDelete && (
+                          {hasAnyPermission(["transaksi-keuangan.edit"]) && (
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => onDelete(transaction.id)}
-                              className="text-red-600 hover:text-red-700"
+                              onClick={() => handleEditClick(transaction)}
                             >
-                              <FaTrash className="h-4 w-4" />
+                              <FaEdit className="h-4 w-4" />
                             </Button>
                           )}
+                          {onDelete &&
+                            hasAnyPermission(["transaksi-keuangan.delete"]) && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => onDelete(transaction.id)}
+                                className="text-red-600 hover:text-red-700"
+                              >
+                                <FaTrash className="h-4 w-4" />
+                              </Button>
+                            )}
                         </div>
                       </td>
                     </tr>

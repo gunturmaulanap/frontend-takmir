@@ -171,7 +171,7 @@ export function DashboardCards({ userRole }: DashboardCardsProps) {
       )}
 
       {/* Finances Card */}
-      {isAdmin && (
+      {(isAdmin || isTakmir) && (
         <Link href="/reports" className="group">
           <div className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 h-48 bg-gradient-to-br from-green-500 to-green-700">
             <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors"></div>
