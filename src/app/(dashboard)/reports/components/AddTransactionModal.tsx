@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { FaSave, FaTimes, FaSpinner } from "react-icons/fa";
+import { FaImage, FaSave, FaTimes, FaSpinner } from "react-icons/fa";
 import {
   Dialog,
   DialogContent,
@@ -33,6 +33,11 @@ import {
 import { reportSchema, ReportFormValues } from "../schema/reportSchema";
 import { useCreateTransaction, useUpdateTransaction } from "@/hooks/useReports";
 import { Report } from "@/types/report";
+import Image from "next/image";
+import {
+  isImagePath,
+  resolveTransactionImageUrl,
+} from "../utils/transactionImage";
 
 interface AddTransactionModalProps {
   open: boolean;
@@ -47,6 +52,9 @@ export default function AddTransactionModal({
   editingTransaction,
   onSuccess,
 }: AddTransactionModalProps) {
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
+  const [hasNewImage, setHasNewImage] = useState(false);
   const createMutation = useCreateTransaction();
   const updateMutation = useUpdateTransaction();
 
@@ -83,6 +91,58 @@ export default function AddTransactionModal({
       });
     }
   }, [editingTransaction, form, open]);
+
+  useEffect(() => {
+    if (editingTransaction?.bukti_transaksi && isImagePath(editingTransaction.bukti_transaksi)) {
+      const imageUrl = resolveTransactionImageUrl(
+        editingTransaction.bukti_transaksi
+      );
+      setExistingImageUrl(imageUrl);
+      setImagePreview(imageUrl);
+      setHasNewImage(false);
+      return;
+    }
+
+    setExistingImageUrl(null);
+    setImagePreview(null);
+    setHasNewImage(false);
+  }, [editingTransaction, open]);
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    form.setValue("bukti_transaksi", file, { shouldValidate: true });
+
+    if (!file.type.startsWith("image/")) {
+      setImagePreview(null);
+      setHasNewImage(true);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+      setHasNewImage(true);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = () => {
+    const nextPreview = existingImageUrl || null;
+    setImagePreview(nextPreview);
+    setHasNewImage(false);
+    form.setValue("bukti_transaksi", null, { shouldValidate: true });
+
+    const fileInput = document.getElementById(
+      "bukti-transaksi-input"
+    ) as HTMLInputElement | null;
+    if (fileInput) {
+      fileInput.value = "";
+    }
+  };
 
   const onSubmit = async (data: ReportFormValues) => {
     const formData = new FormData();
@@ -291,19 +351,42 @@ export default function AddTransactionModal({
               control={form.control}
               name="bukti_transaksi"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base font-semibold">
+                <FormItem className="space-y-3">
+                  <FormLabel className="text-base font-semibold flex items-center">
+                    <FaImage className="mr-2 text-emerald-600" />
                     Bukti Transaksi
                   </FormLabel>
+                  {imagePreview && (
+                    <div className="relative w-full h-80 bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-300">
+                      <Image
+                        fill
+                        src={imagePreview}
+                        alt="Preview bukti transaksi"
+                        className="object-contain"
+                        sizes="(max-width: 768px) 100vw, 500px"
+                        priority
+                      />
+                      {hasNewImage && (
+                        <button
+                          type="button"
+                          onClick={handleRemoveImage}
+                          className="absolute top-2 right-2 p-2 bg-red-500 hover:bg-red-600 text-white rounded-full"
+                        >
+                          <FaTimes className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                  )}
                   <FormControl>
                     <div className="space-y-2">
                       <Input
+                        id="bukti-transaksi-input"
                         type="file"
                         accept="image/*,.pdf"
                         disabled={isPending}
                         onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          field.onChange(file || null);
+                          handleImageChange(e);
+                          field.onChange(e.target.files?.[0] || null);
                         }}
                       />
                       <p className="text-sm text-gray-500">

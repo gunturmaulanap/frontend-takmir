@@ -1,7 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FaPlus, FaArrowUp, FaArrowDown, FaEdit, FaTrash, FaCalendar } from "react-icons/fa";
+import {
+  FaPlus,
+  FaArrowUp,
+  FaArrowDown,
+  FaEdit,
+  FaTrash,
+  FaCalendar,
+  FaEye,
+} from "react-icons/fa";
 import { useTransactions } from "@/hooks/useReports";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
@@ -17,6 +25,12 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Image from "next/image";
+import TransactionDetailModal from "./TransactionDetailModal";
+import {
+  isImagePath,
+  resolveTransactionImageUrl,
+} from "../utils/transactionImage";
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat("id-ID", {
@@ -34,7 +48,9 @@ interface ReportListProps {
 export default function ReportList({ onDelete }: ReportListProps) {
   const [page, setPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
+  const [detailOpen, setDetailOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Report | null>(null);
+  const [detailTransaction, setDetailTransaction] = useState<Report | null>(null);
   const [filterType, setFilterType] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -77,6 +93,11 @@ export default function ReportList({ onDelete }: ReportListProps) {
   const handleEditClick = (transaction: Report) => {
     setEditingTransaction(transaction);
     setModalOpen(true);
+  };
+
+  const handleDetailClick = (transaction: Report) => {
+    setDetailTransaction(transaction);
+    setDetailOpen(true);
   };
 
   const handleClearDates = () => {
@@ -263,7 +284,31 @@ export default function ReportList({ onDelete }: ReportListProps) {
                   </p>
                 )}
 
+                {transaction.bukti_transaksi &&
+                  isImagePath(transaction.bukti_transaksi) && (
+                    <div className="relative w-full h-40 bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
+                      <Image
+                        src={resolveTransactionImageUrl(
+                          transaction.bukti_transaksi
+                        )}
+                        alt={`Bukti transaksi ${transaction.kategori}`}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 400px"
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+
                 <div className="flex gap-2 pt-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDetailClick(transaction)}
+                    className="flex-1"
+                  >
+                    <FaEye className="mr-2 h-3 w-3" />
+                    Detail
+                  </Button>
                   <Button
                     variant="outline"
                     size="sm"
@@ -312,6 +357,9 @@ export default function ReportList({ onDelete }: ReportListProps) {
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Keterangan
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Bukti
                     </th>
                     <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Aksi
@@ -370,8 +418,33 @@ export default function ReportList({ onDelete }: ReportListProps) {
                       <td className="px-6 py-4 text-sm text-gray-600 max-w-xs">
                         {transaction.keterangan || "-"}
                       </td>
+                      <td className="px-6 py-4 text-sm text-gray-600">
+                        {transaction.bukti_transaksi &&
+                        isImagePath(transaction.bukti_transaksi) ? (
+                          <div className="relative w-16 h-16 bg-gray-100 rounded-md overflow-hidden border border-gray-200">
+                            <Image
+                              src={resolveTransactionImageUrl(
+                                transaction.bukti_transaksi
+                              )}
+                              alt={`Bukti transaksi ${transaction.kategori}`}
+                              fill
+                              sizes="64px"
+                              className="object-cover"
+                            />
+                          </div>
+                        ) : (
+                          "-"
+                        )}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
                         <div className="flex items-center justify-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDetailClick(transaction)}
+                          >
+                            <FaEye className="h-4 w-4" />
+                          </Button>
                           <Button
                             variant="ghost"
                             size="sm"
@@ -463,6 +536,11 @@ export default function ReportList({ onDelete }: ReportListProps) {
           setModalOpen(false);
           setEditingTransaction(null);
         }}
+      />
+      <TransactionDetailModal
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+        transaction={detailTransaction}
       />
     </div>
   );
